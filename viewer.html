@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crónicas de Ortandria — Ep. 1: La Tienda del Pez Globo</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-panel: #141420;
+            --text-primary: #e8e8f0;
+            --text-secondary: #8888aa;
+            --accent-magenta: #ff2d95;
+            --accent-cyan: #00e5ff;
+            --accent-lime: #39ff14;
+            --border-glow: rgba(255, 45, 149, 0.3);
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(180deg, #1a0a2e 0%, var(--bg-dark) 100%);
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-magenta);
+        }
+
+        header h1 {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: linear-gradient(90deg, var(--accent-magenta), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        header .meta {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+        }
+
+        .comic-strip {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1.5rem 1rem;
+        }
+
+        .panel {
+            position: relative;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-glow);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .panel:hover {
+            border-color: var(--accent-cyan);
+        }
+
+        .panel img {
+            width: 100%;
+            display: block;
+        }
+
+        .panel-label {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            background: rgba(0, 0, 0, 0.75);
+            color: var(--accent-lime);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .panel-desc {
+            padding: 0.75rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .panel-desc strong {
+            color: var(--accent-magenta);
+        }
+
+        .panel.splash {
+            border-color: var(--accent-magenta);
+            box-shadow: 0 0 30px rgba(255, 45, 149, 0.15);
+        }
+
+        .panel.split {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 2px;
+        }
+
+        .panel.split img {
+            width: 100%;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Crónicas de Ortandria</h1>
+        <p class="subtitle">Episodio 1: La Tienda del Pez Globo</p>
+        <div class="meta">
+            <span>16 paneles</span>
+            <span>Scroll vertical</span>
+            <span>Estilo: Invincible × Penny Arcade</span>
+        </div>
+    </header>
+
+    <main class="comic-strip" id="comic-strip">
+        <p style="text-align:center;color:#8888aa;padding:2rem;">Cargando webcomic...</p>
+    </main>
+
+    <footer>
+        <p>Generado por <strong>Webcomic Director Orchestrator</strong> v0.1.0</p>
+        <p>Imágenes vía <a href="https://pollinations.ai" target="_blank">Pollinations.ai</a> (Flux model)</p>
+    </footer>
+
+    <script>
+        const PANELS = [
+            { id: 1, label: "El Universo de Ortandria", desc: "Vista espacial con planeta envuelto en cinta burocrática", splash: false },
+            { id: 2, label: "Sillón Abisal", desc: "Ciudad caótica con cartel político de hongo sonriente", splash: false },
+            { id: 3, label: "El Viajero", desc: "Reflejo en cristal del héroe con gafas oscuras y perilla", splash: false },
+            { id: 4, label: "La Tienda del Pez Globo", desc: "Contrapicado con letreros neón chillones", splash: false },
+            { id: 5, label: "La Crisis Universal", desc: "Pez Globo robótico con grieta dimensional púrpura", splash: false },
+            { id: 6, label: "La Negociación", desc: "Viajero escéptico señalando la grieta", splash: false },
+            { id: 7, label: "Multi-Herramienta Definitiva™", desc: "Anuncio vintage: cuchara → llave → ardilla", splash: false },
+            { id: 8, label: "Advertencias", desc: "Pez Globo suspira, goblins oficinistas en nube", splash: false },
+            { id: 9, label: "El Contrato", desc: "Sello de cera roja sobre papel arrugado — BLORP!", splash: false },
+            { id: 10, label: "La Herramienta Cobra Vida", desc: "Pinzas de barbacoa con runas salen volando — CRACK", splash: false },
+            { id: 11, label: "Tutorial Imposible", desc: "Zanahoria de metal lanza chispazo eléctrico — ZAP!", splash: false },
+            { id: 12, label: "Baguettes Armadas", desc: "Ejército de baguettes furiosas con cucharas de combate", splash: false },
+            { id: 13, label: "Hechizo Fallido", desc: "Calcetín viejo se hincha con magia rosa — FWOOOOSH", splash: false },
+            { id: 14, label: "Baguettes Atacan", desc: "Baguettes brillan como sables de luz — VIVA LA CROISSANT!", splash: false },
+            { id: 15, label: "¡LEEROOY JENKINS!", desc: "¡Splash page! Viajero lanza el calcetín-zeppelin", splash: true },
+            { id: 16, label: "La Paz Está Servida", desc: "Baguettes lloran ante el Gran Calcetín de la Paz", split: true },
+        ];
+
+        async function loadComic() {
+            const container = document.getElementById('comic-strip');
+            container.innerHTML = '';
+
+            try {
+                const res = await fetch('/api/images');
+                const data = await res.json();
+                const images = data.images || [];
+
+                const panelMap = {};
+                images.forEach(img => {
+                    const match = img.filename.match(/^panel_(\d+)_/);
+                    if (match) {
+                        const panelNum = parseInt(match[1]);
+                        if (!panelMap[panelNum] || img.filename > panelMap[panelNum].filename) {
+                            panelMap[panelNum] = img;
+                        }
+                    }
+                });
+
+                PANELS.forEach(panel => {
+                    const img = panelMap[panel.id];
+                    if (!img) return;
+
+                    const div = document.createElement('div');
+                    div.className = 'panel' + (panel.splash ? ' splash' : '') + (panel.split ? ' split' : '');
+
+                    div.innerHTML = `
+                        <span class="panel-label">Panel ${panel.id}</span>
+                        <img src="/images/${encodeURIComponent(img.filename)}" alt="Panel ${panel.id}: ${panel.label}" loading="lazy">
+                        <div class="panel-desc">
+                            <strong>${panel.label}</strong> — ${panel.desc}
+                            <br><small>${(img.size_bytes / 1024).toFixed(1)} KB</small>
+                        </div>
+                    `;
+
+                    container.appendChild(div);
+                });
+
+                if (container.children.length === 0) {
+                    container.innerHTML = '<p style="text-align:center;color:#8888aa;padding:2rem;">No se encontraron imágenes. Genera los paneles primero.</p>';
+                }
+
+            } catch (err) {
+                container.innerHTML = `
+                    <p style="text-align:center;color:#8888aa;padding:2rem;">
+                        No se pudo conectar al servidor.<br>
+                        Ejecuta <code>python app.py serve</code> para ver el cómic.
+                    </p>
+                `;
+
+                PANELS.forEach(panel => {
+                    const div = document.createElement('div');
+                    div.className = 'panel' + (panel.splash ? ' splash' : '');
+                    div.innerHTML = `
+                        <span class="panel-label">Panel ${panel.id}</span>
+                        <div style="padding:3rem;text-align:center;color:#555;">
+                            Panel ${panel.id}: ${panel.label}
+                        </div>
+                        <div class="panel-desc">
+                            <strong>${panel.label}</strong> — ${panel.desc}
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadComic);
+    </script>
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrusel Instagram — Webcomic Director</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #141420;
+            --text-primary: #e8e8f0;
+            --text-secondary: #8888aa;
+            --accent-magenta: #ff2d95;
+            --accent-cyan: #00e5ff;
+            --accent-lime: #39ff14;
+            --ig-gradient: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--ig-gradient);
+            padding: 1.5rem 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: clamp(1.4rem, 4vw, 2.2rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.3rem;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 0.3rem 0.8rem;
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .nav-links a:hover { background: rgba(255,255,255,0.15); }
+        .nav-links a.active { background: rgba(255,255,255,0.25); border-color: white; }
+
+        .carousel-selector {
+            max-width: 800px;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+        }
+
+        .carousel-selector h2 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+        }
+
+        .carousel-list {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .carousel-item {
+            background: var(--bg-card);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .carousel-item:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .carousel-item.active {
+            border-color: var(--accent-magenta);
+            box-shadow: 0 0 15px rgba(255, 45, 149, 0.2);
+        }
+
+        .carousel-item .name {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .carousel-item .meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+        }
+
+        .carousel-viewer {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .slide-container {
+            position: relative;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .slide-container img {
+            width: 100%;
+            display: block;
+            min-height: 400px;
+            object-fit: contain;
+            background: #000;
+        }
+
+        .slide-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .slide-counter {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .slide-badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .slide-badge.cover { background: var(--accent-magenta); }
+        .slide-badge.content { background: var(--accent-cyan); color: #000; }
+        .slide-badge.cta { background: var(--accent-lime); color: #000; }
+
+        .slide-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .slide-nav button {
+            background: var(--bg-card);
+            border: 1px solid var(--text-secondary);
+            color: var(--text-primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .slide-nav button:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 229, 255, 0.1);
+        }
+
+        .slide-nav button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .slide-dots {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .slide-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+            opacity: 0.3;
+            transition: opacity 0.2s, background 0.2s;
+            cursor: pointer;
+        }
+
+        .slide-dot.active {
+            opacity: 1;
+            background: var(--accent-magenta);
+        }
+
+        .format-badge {
+            display: inline-block;
+            background: var(--bg-card);
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-top: 0.8rem;
+            color: var(--accent-cyan);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state code {
+            background: var(--bg-card);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.85rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 600px) {
+            .slide-container img { min-height: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Carrusel Instagram</h1>
+        <p>Visor de carruseles generados por Webcomic Director</p>
+        <div class="nav-links">
+            <a href="/">Webcomic Scroll</a>
+            <a href="/carousel" class="active">Carrusel Instagram</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="carousel-selector" id="carousel-selector">
+            <h2>Selecciona un carrusel</h2>
+            <div class="carousel-list" id="carousel-list">
+                <p style="color: var(--text-secondary);">Cargando carruseles...</p>
+            </div>
+        </div>
+
+        <div class="carousel-viewer" id="carousel-viewer" style="display: none;">
+            <div class="slide-container">
+                <img id="slide-image" src="" alt="Slide">
+                <div class="slide-overlay">
+                    <span class="slide-counter" id="slide-counter"></span>
+                    <span class="slide-badge" id="slide-badge"></span>
+                </div>
+            </div>
+
+            <div class="slide-nav">
+                <button id="prev-btn" onclick="prevSlide()">Anterior</button>
+                <div class="slide-dots" id="slide-dots"></div>
+                <button id="next-btn" onclick="nextSlide()">Siguiente</button>
+            </div>
+
+            <div style="text-align: center;">
+                <span class="format-badge" id="format-badge"></span>
+            </div>
+        </div>
+
+        <div class="empty-state" id="empty-state" style="display: none;">
+            <p>No hay carruseles generados aun.</p>
+            <p style="margin-top: 0.5rem;">Genera uno con:</p>
+            <p style="margin-top: 0.5rem;"><code>python app.py gen-carousel --prompts-json @prompts.json --title "ortandria-ep1" --format portrait</code></p>
+        </div>
+    </main>
+
+    <footer>
+        <p>Generado por <strong>Webcomic Director Orchestrator</strong> v0.1.0</p>
+        <p>Formato Instagram: Portrait 1080x1350 (4:5) o Square 1080x1080 (1:1)</p>
+    </footer>
+
+    <script>
+        let carousels = [];
+        let currentCarousel = null;
+        let currentSlideIndex = 0;
+
+        async function loadCarousels() {
+            try {
+                const res = await fetch('/api/carousels');
+                const data = await res.json();
+                carousels = data.carousels || [];
+
+                const listEl = document.getElementById('carousel-list');
+                if (carousels.length === 0) {
+                    listEl.innerHTML = '<p style="color: var(--text-secondary);">No hay carruseles. Genera uno primero.</p>';
+                    document.getElementById('empty-state').style.display = 'block';
+                    return;
+                }
+
+                listEl.innerHTML = '';
+                carousels.forEach((c, idx) => {
+                    const div = document.createElement('div');
+                    div.className = 'carousel-item';
+                    div.onclick = () => selectCarousel(idx);
+                    div.innerHTML = `
+                        <div class="name">${c.name}</div>
+                        <div class="meta">${c.slide_count} slides</div>
+                    `;
+                    listEl.appendChild(div);
+                });
+
+                selectCarousel(0);
+            } catch (err) {
+                document.getElementById('carousel-list').innerHTML =
+                    '<p style="color: var(--text-secondary);">Error cargando carruseles.</p>';
+            }
+        }
+
+        function selectCarousel(idx) {
+            currentCarousel = carousels[idx];
+            currentSlideIndex = 0;
+
+            document.querySelectorAll('.carousel-item').forEach((el, i) => {
+                el.classList.toggle('active', i === idx);
+            });
+
+            document.getElementById('carousel-selector').style.display = 'none';
+            document.getElementById('empty-state').style.display = 'none';
+            document.getElementById('carousel-viewer').style.display = 'block';
+
+            renderSlide();
+            renderDots();
+        }
+
+        function renderSlide() {
+            if (!currentCarousel) return;
+            const slide = currentCarousel.slides[currentSlideIndex];
+            const img = document.getElementById('slide-image');
+            img.src = `/carousel/${encodeURIComponent(currentCarousel.name)}/${encodeURIComponent(slide.filename)}`;
+            img.alt = `Slide ${currentSlideIndex + 1} de ${currentCarousel.slide_count}`;
+
+            document.getElementById('slide-counter').textContent =
+                `${currentSlideIndex + 1} / ${currentCarousel.slide_count}`;
+
+            const badge = document.getElementById('slide-badge');
+            const num = currentSlideIndex + 1;
+            const total = currentCarousel.slide_count;
+            if (num === 1) {
+                badge.textContent = 'Portada';
+                badge.className = 'slide-badge cover';
+            } else if (num === total) {
+                badge.textContent = 'CTA';
+                badge.className = 'slide-badge cta';
+            } else {
+                badge.textContent = `${num}/${total}`;
+                badge.className = 'slide-badge content';
+            }
+
+            document.getElementById('format-badge').textContent =
+                `${slide.size_bytes ? (slide.size_bytes / 1024).toFixed(1) : '?'} KB`;
+
+            document.getElementById('prev-btn').disabled = currentSlideIndex === 0;
+            document.getElementById('next-btn').disabled = currentSlideIndex >= currentCarousel.slide_count - 1;
+
+            updateDots();
+        }
+
+        function renderDots() {
+            const dotsEl = document.getElementById('slide-dots');
+            dotsEl.innerHTML = '';
+            for (let i = 0; i < currentCarousel.slide_count; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'slide-dot';
+                dot.onclick = () => { currentSlideIndex = i; renderSlide(); };
+                dotsEl.appendChild(dot);
+            }
+            updateDots();
+        }
+
+        function updateDots() {
+            document.querySelectorAll('.slide-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlideIndex);
+            });
+        }
+
+        function prevSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                renderSlide();
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < currentCarousel.slide_count - 1) {
+                currentSlideIndex++;
+                renderSlide();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight') nextSlide();
+        });
+
+        document.addEventListener('DOMContentLoaded', loadCarousels);
+    </script>
+</body>
+</html>

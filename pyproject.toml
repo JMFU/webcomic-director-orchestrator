@@ -1,0 +1,13 @@
+[project]
+name = "webcomic-director-orchestrator"
+version = "0.1.0"
+description = "Agente Director para pipeline modular de creación de webcómics."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+  { name = "jmart" }
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
